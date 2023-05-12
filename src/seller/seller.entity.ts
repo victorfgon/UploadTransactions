@@ -5,20 +5,20 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IsNumber } from 'class-validator';
+import { IsBoolean, IsNumber } from 'class-validator';
 
 @Entity()
-export class Balance {
+export class Seller {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  @IsNumber()
-  producerBalance: number;
+  @IsBoolean()
+  isProducer: boolean;
 
   @Column()
   @IsNumber()
-  affiliateBalance: number;
+  balance: number;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './configs/typeorm.config';
 import { TransactionModule } from './transaction/transaction.module';
-import { BalanceModule } from './balance/balance.module';
+import { SellerModule } from './seller/seller.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig),
     TransactionModule,
-    BalanceModule,
+    SellerModule,
   ],
   controllers: [],
   providers: [],
