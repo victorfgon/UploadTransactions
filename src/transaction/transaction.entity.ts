@@ -10,7 +10,7 @@ import { IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 @Entity()
 export class Transaction {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column()
   @IsInt()
@@ -36,8 +36,8 @@ export class Transaction {
   seller: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 }

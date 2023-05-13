@@ -1,27 +1,38 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { TransactionRepository } from './transaction.repository';
 import { Transaction } from './transaction.entity';
+import { UploadedFile } from 'express-fileupload';
+import { InjectEntityManager } from '@nestjs/typeorm';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class TransactionService {
   private readonly logger = new Logger(TransactionService.name);
-  constructor(
-    @InjectRepository(TransactionRepository)
-    private transactionRepository: TransactionRepository,
-  ) {}
+  constructor(@InjectEntityManager() private entityManager: EntityManager) {}
 
-  async importTransactions(transactions: Transaction[]): Promise<void> {
+  async importTransactions(file: UploadedFile): Promise<void> {
     try {
-      for (const transaction of transactions) {
-        const normalizedTransaction =
-          this.normalizeTransactionData(transaction);
+      const transactions: Transaction[] = [];
+      const lines = file.buffer.toString('utf-8').split('\n');
 
-        const newTransaction = this.transactionRepository.create(
-          normalizedTransaction,
-        );
+      for (const line of lines) {
+        const type = line.substr(0, 1);
+        const date = line.substr(1, 25).trim();
+        const product = line.substr(26, 30).trim();
+        const value = parseFloat(line.substr(56, 10));
+        const seller = line.substr(66, 20).trim();
 
-        await this.transactionRepository.save(newTransaction);
+        const transaction: Transaction = {
+          type: parseInt(type),
+          date: new Date(date),
+          product,
+          value,
+          seller,
+        };
+
+        if (!Number.isNaN(transaction.value)) {
+          transactions.push(transaction);
+          await this.entityManager.save(Transaction, transaction);
+        }
       }
 
       this.logger.log(
@@ -33,26 +44,9 @@ export class TransactionService {
     }
   }
 
-  normalizeTransactionData(transaction: Transaction): Transaction {
-    const [date, product, value, seller] = transaction.date
-      .toString()
-      .split(' ');
-
-    const normalizedTransaction: Transaction = {
-      ...transaction,
-      date: new Date(date),
-      product: product.trim(),
-      value: parseFloat(value),
-      seller: seller.trim(),
-    };
-
-    return normalizedTransaction;
-  }
-
   async getAllTransactions(): Promise<Transaction[]> {
     try {
-      const transactions = await this.transactionRepository.find();
-      return transactions;
+      return this.entityManager.find(Transaction);
     } catch (error) {
       throw new Error('Failed to fetch transactions.');
     }

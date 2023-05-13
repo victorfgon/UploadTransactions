@@ -9,4 +9,5 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   database: 'nestjs',
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
   synchronize: true,
+  autoLoadEntities: true,
 };
