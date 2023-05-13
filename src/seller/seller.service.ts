@@ -1,18 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { SellerRepository } from './seller.repository';
+import { EntityManager } from 'typeorm';
+import { Seller } from './seller.entity';
 
 @Injectable()
 export class SellerService {
-  constructor(
-    @InjectRepository(SellerRepository)
-    private sellerRepository: SellerRepository,
-  ) {}
+  constructor(private readonly entityManager: EntityManager) {}
 
-  async getBalance(Id: number): Promise<number> {
+  async getBalance(id: number): Promise<number> {
     try {
-      const seller = await this.sellerRepository.findOne({
-        where: { id: Id },
+      const seller = await this.entityManager.findOne(Seller, {
+        where: { id },
       });
 
       if (seller) {
@@ -21,7 +18,7 @@ export class SellerService {
         return 0;
       }
     } catch (error) {
-      throw new Error('Failed to fetch producer balance.');
+      throw new Error('Failed to fetch seller balance.');
     }
   }
 }
