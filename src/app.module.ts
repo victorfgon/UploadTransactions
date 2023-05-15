@@ -4,6 +4,7 @@ import { typeOrmConfig } from './configs/typeorm.config';
 import { TransactionModule } from './transaction/transaction.module';
 import { SellerModule } from './seller/seller.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { MulterModule } from '@nestjs/platform-express';
       dest: './',
     }),
     SellerModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],
