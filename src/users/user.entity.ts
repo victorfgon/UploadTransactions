@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { IsEmail, Length } from 'class-validator';
+import * as bcrypt from 'bcrypt';
 
 @Entity()
 @Unique(['email'])
@@ -27,14 +28,14 @@ export class User extends BaseEntity {
   @Length(1, 50)
   role: string;
 
-  @Column()
+  @Column({ nullable: false, default: true })
   status: boolean;
 
   @Column()
   @Length(6, 255)
   password: string;
 
-  @Column()
+  @Column({ nullable: false })
   salt: string;
 
   @Column({ nullable: true, type: 'varchar', length: 64 })
@@ -48,4 +49,9 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  async checkPassword(password: string): Promise<boolean> {
+    const hash = await bcrypt.hash(password, this.salt);
+    return hash === this.password;
+  }
 }

@@ -5,6 +5,7 @@ import { TransactionModule } from './transaction/transaction.module';
 import { SellerModule } from './seller/seller.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UsersModule } from './users/users.module';
     }),
     SellerModule,
     UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
