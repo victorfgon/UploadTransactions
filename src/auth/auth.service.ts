@@ -33,7 +33,7 @@ export class AuthService {
     const user = new User();
     user.email = email;
     user.name = name;
-    user.role = UserRole.ADMIN;
+    user.role = UserRole.USER;
     user.status = true;
     user.confirmationToken = crypto.randomBytes(32).toString('hex');
     user.salt = await bcrypt.genSalt();
