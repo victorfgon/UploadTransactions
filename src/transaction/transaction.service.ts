@@ -7,6 +7,7 @@ import { EntityManager } from 'typeorm';
 @Injectable()
 export class TransactionService {
   private readonly logger = new Logger(TransactionService.name);
+
   constructor(@InjectEntityManager() private entityManager: EntityManager) {}
 
   async importTransactions(file: UploadedFile): Promise<void> {
@@ -48,6 +49,7 @@ export class TransactionService {
     try {
       return this.entityManager.find(Transaction);
     } catch (error) {
+      this.logger.error('Failed to fetch transactions.', error);
       throw new Error('Failed to fetch transactions.');
     }
   }

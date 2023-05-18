@@ -10,10 +10,14 @@ import { UserRole } from './user-roles.enum';
 import { EntityManager } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
+import { InjectEntityManager } from '@nestjs/typeorm';
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
-  constructor(private entityManager: EntityManager) {}
+  private readonly logger = new Logger(UsersService.name);
+
+  constructor(@InjectEntityManager() private entityManager: EntityManager) {}
 
   async createAdminUser(createUserDto: CreateUserDto): Promise<User> {
     const { email, name, password, passwordConfirmation } = createUserDto;
@@ -40,7 +44,7 @@ export class UsersService {
       if (error.code === '23505') {
         throw new ConflictException('Email address is already in use');
       } else {
-        console.log(error);
+        this.logger.error('Error saving user to database', error);
         throw new InternalServerErrorException('Error saving user to database');
       }
     }

@@ -1,10 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
 import { Seller } from './seller.entity';
+import { InjectEntityManager } from '@nestjs/typeorm';
 
 @Injectable()
 export class SellerService {
-  constructor(private readonly entityManager: EntityManager) {}
+  private readonly logger = new Logger(SellerService.name);
+
+  constructor(@InjectEntityManager() private entityManager: EntityManager) {}
 
   async getBalance(id: number): Promise<number> {
     try {
@@ -18,6 +21,9 @@ export class SellerService {
         return 0;
       }
     } catch (error) {
+      this.logger.error(
+        `Failed to fetch seller balance. Error: ${error.message}`,
+      );
       throw new Error('Failed to fetch seller balance.');
     }
   }

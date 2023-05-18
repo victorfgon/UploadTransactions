@@ -4,6 +4,7 @@ import {
   UnauthorizedException,
   ConflictException,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
@@ -17,6 +18,8 @@ import * as crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     @InjectEntityManager()
     private entityManager: EntityManager,
@@ -24,31 +27,36 @@ export class AuthService {
   ) {}
 
   async signUp(createUserDto: CreateUserDto): Promise<User> {
-    if (createUserDto.password !== createUserDto.passwordConfirmation) {
-      throw new UnprocessableEntityException('As senhas não conferem');
-    }
-
-    const { email, name, password } = createUserDto;
-
-    const user = new User();
-    user.email = email;
-    user.name = name;
-    user.role = UserRole.USER;
-    user.status = true;
-    user.confirmationToken = crypto.randomBytes(32).toString('hex');
-    user.salt = await bcrypt.genSalt();
-    user.password = await this.hashPassword(password, user.salt);
-
     try {
+      if (createUserDto.password !== createUserDto.passwordConfirmation) {
+        throw new UnprocessableEntityException('Unmatched passwords');
+      }
+
+      const { email, name, password } = createUserDto;
+
+      const user = new User();
+      user.email = email;
+      user.name = name;
+      user.role = UserRole.USER;
+      user.status = true;
+      user.confirmationToken = crypto.randomBytes(32).toString('hex');
+      user.salt = await bcrypt.genSalt();
+      user.password = await this.hashPassword(password, user.salt);
+
       await this.entityManager.save(user);
       delete user.password;
       delete user.salt;
       return user;
     } catch (error) {
       if (error.code === '23505') {
+        this.logger.error(
+          `Email address is already in use. Error: ${error.message}`,
+        );
         throw new ConflictException('Email address is already in use');
       } else {
-        console.log(error);
+        this.logger.error(
+          `Error saving user to database. Error: ${error.message}`,
+        );
         throw new InternalServerErrorException('Error saving user to database');
       }
     }
@@ -59,31 +67,43 @@ export class AuthService {
   }
 
   async signIn(credentialsDto: CredentialsDto) {
-    const user = await this.checkCredentials(credentialsDto);
+    try {
+      const user = await this.checkCredentials(credentialsDto);
 
-    if (user === null) {
-      throw new UnauthorizedException('Credenciais inválidas');
+      if (user === null) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+
+      const jwtPayload = {
+        id: user.id,
+      };
+
+      const token = this.jwtService.sign(jwtPayload);
+
+      return { token };
+    } catch (error) {
+      this.logger.error(`Failed to sign in. Error: ${error.message}`);
+      throw new UnauthorizedException('Failed to sign in');
     }
-
-    const jwtPayload = {
-      id: user.id,
-    };
-
-    const token = this.jwtService.sign(jwtPayload);
-
-    return { token };
   }
 
   async checkCredentials(credentialsDto: CredentialsDto): Promise<User> {
-    const { email, password } = credentialsDto;
-    const user = await this.entityManager.findOne(User, {
-      where: { email, status: true },
-    });
+    try {
+      const { email, password } = credentialsDto;
+      const user = await this.entityManager.findOne(User, {
+        where: { email, status: true },
+      });
 
-    if (user && (await user.checkPassword(password))) {
-      return user;
-    } else {
-      return null;
+      if (user && (await user.checkPassword(password))) {
+        return user;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      this.logger.error(
+        `Failed to check user credentials. Error: ${error.message}`,
+      );
+      throw new UnauthorizedException('Failed to check user credentials');
     }
   }
 }
