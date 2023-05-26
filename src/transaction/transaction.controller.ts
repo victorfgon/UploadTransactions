@@ -32,9 +32,9 @@ export class TransactionController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiResponse({ status: 200, description: 'File sent with success!' })
   @ApiResponse({ status: 500, description: 'Failed to import transactions' })
-  async uploadFile(@UploadedFile() file: any): Promise<any> {
+  async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<any> {
     try {
-      await this.transactionService.importTransactions(file);
+      await this.transactionService.importTransactions(file.buffer);
       return { message: 'File sent with success!' };
     } catch (error) {
       this.logger.error(`Failed to import transactions: ${error.message}`);

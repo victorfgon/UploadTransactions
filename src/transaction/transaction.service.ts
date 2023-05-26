@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Transaction } from './transaction.entity';
-import { UploadedFile } from 'express-fileupload';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
 
@@ -10,10 +9,10 @@ export class TransactionService {
 
   constructor(@InjectEntityManager() private entityManager: EntityManager) {}
 
-  async importTransactions(file: UploadedFile): Promise<void> {
+  async importTransactions(file: Buffer): Promise<void> {
     try {
       const transactions: Transaction[] = [];
-      const lines = file.buffer.toString('utf-8').split('\n');
+      const lines = file.toString('utf-8').split('\n');
 
       for (const line of lines) {
         const type = line.substr(0, 1);
@@ -29,6 +28,8 @@ export class TransactionService {
           value,
           seller,
         };
+
+        this.logger.log(transaction);
 
         if (!Number.isNaN(transaction.value)) {
           transactions.push(transaction);

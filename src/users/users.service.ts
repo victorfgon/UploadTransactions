@@ -12,6 +12,7 @@ import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { Logger } from '@nestjs/common';
+import { ReturnUserDto } from './dto/return-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -19,7 +20,7 @@ export class UsersService {
 
   constructor(@InjectEntityManager() private entityManager: EntityManager) {}
 
-  async createAdminUser(createUserDto: CreateUserDto): Promise<User> {
+  async createAdminUser(createUserDto: CreateUserDto): Promise<ReturnUserDto> {
     const { email, name, password, passwordConfirmation } = createUserDto;
 
     if (password !== passwordConfirmation) {
@@ -37,9 +38,11 @@ export class UsersService {
 
     try {
       await this.entityManager.save(user);
-      delete user.password;
-      delete user.salt;
-      return user;
+      return {
+        email,
+        name,
+        message: 'Admin user successfully registered',
+      };
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException('Email address is already in use');

@@ -11,8 +11,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { ReturnUserDto } from './dto/return-user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { Role } from 'src/auth/role.decorator';
 import { UserRole } from './user-roles.enum';
+import { Role } from 'src/auth/role.decorator';
 
 @Controller('api/v1/users')
 @ApiTags('Users')
@@ -35,11 +35,7 @@ export class UsersController {
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<ReturnUserDto> {
     try {
-      const user = await this.usersService.createAdminUser(createUserDto);
-      return {
-        user,
-        message: 'Admin user successfully registered',
-      };
+      return this.usersService.createAdminUser(createUserDto);
     } catch (error) {
       this.logger.error(`Failed to create admin user. Error: ${error.message}`);
       throw new Error('Failed to create admin user. Please try again later.');
