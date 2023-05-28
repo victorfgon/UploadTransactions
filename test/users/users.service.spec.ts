@@ -22,7 +22,7 @@ jest.mock('bcrypt', () => ({
 }));
 
 describe('UsersService', () => {
-  let service: UsersService;
+  let usersService: UsersService;
   let entityManager: EntityManager;
 
   beforeEach(async () => {
@@ -33,12 +33,12 @@ describe('UsersService', () => {
       ],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);
+    usersService = module.get<UsersService>(UsersService);
     entityManager = module.get<EntityManager>(EntityManager);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(usersService).toBeDefined();
     expect(entityManager).toBeDefined();
   });
 
@@ -76,7 +76,7 @@ describe('UsersService', () => {
         .spyOn(entityManager, 'save')
         .mockResolvedValueOnce(Object.assign(new User(), mockUser));
 
-      const result = await service.createAdminUser(mockCreateUserDto);
+      const result = await usersService.createAdminUser(mockCreateUserDto);
 
       expect(bcrypt.hash).toHaveBeenCalledWith('password123', 'mockSalt');
       expect(saveSpy).toHaveBeenCalledWith(
@@ -96,25 +96,25 @@ describe('UsersService', () => {
     it('should throw an UnprocessableEntityException if passwords do not match', async () => {
       mockCreateUserDto.passwordConfirmation = 'wrongPassword';
 
-      await expect(service.createAdminUser(mockCreateUserDto)).rejects.toThrow(
-        UnprocessableEntityException,
-      );
+      await expect(
+        usersService.createAdminUser(mockCreateUserDto),
+      ).rejects.toThrow(UnprocessableEntityException);
     });
 
     it('should throw a ConflictException if email address is already in use', async () => {
       jest.spyOn(entityManager, 'save').mockRejectedValue({ code: '23505' });
 
-      await expect(service.createAdminUser(mockCreateUserDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(
+        usersService.createAdminUser(mockCreateUserDto),
+      ).rejects.toThrow(ConflictException);
     });
 
     it('should throw an InternalServerErrorException if there is an error saving user to database', async () => {
       jest.spyOn(entityManager, 'save').mockRejectedValue(new Error());
 
-      await expect(service.createAdminUser(mockCreateUserDto)).rejects.toThrow(
-        InternalServerErrorException,
-      );
+      await expect(
+        usersService.createAdminUser(mockCreateUserDto),
+      ).rejects.toThrow(InternalServerErrorException);
     });
   });
 });

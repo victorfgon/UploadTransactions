@@ -29,8 +29,6 @@ export class TransactionService {
           seller,
         };
 
-        this.logger.log(transaction);
-
         if (!Number.isNaN(transaction.value)) {
           transactions.push(transaction);
           await this.entityManager.save(Transaction, transaction);
