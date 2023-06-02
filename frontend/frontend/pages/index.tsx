@@ -31,11 +31,18 @@ const HomePage = () => {
     router.push('/upload');
   };
 
+  const handleTransactionsClick = () => {
+    router.push('/transaction');
+  };
+
   return (
     <div>
       <h1>Home Page</h1>
       {token ? (
-        <button onClick={handleUploadClick}>Upload Transactions</button>
+        <>
+          <button onClick={handleUploadClick}>Upload Transactions</button>
+          <button onClick={handleTransactionsClick}>Go to Transactions</button>
+        </>
       ) : (
         <button onClick={handleLogin}>Login</button>
       )}
