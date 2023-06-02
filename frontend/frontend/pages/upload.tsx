@@ -1,28 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
+import { AuthContext } from './auth-context';
 
 const Upload = () => {
-  const [token, setToken] = useState('');
-
-  const handleLogin = async () => {
-    try {
-      const response = await axios.post('http://localhost:3000/api/v1/auth/signin', {
-        email: 'admin3@gmail.com',
-        password: '@123Abc',
-      });
-      const { token } = response.data;
-      setToken(token);
-    } catch (error) {
-      console.error('Error occurred during login:', error);
-    }
-  };
+  const authContext = useContext(AuthContext);
+  const token = authContext?.token ?? '';
+  const [isFileSelected, setIsFileSelected] = useState(false);
 
   const handleUpload = async () => {
-    if (!token) {
-      console.error('Not logged in');
-      return;
-    }
-
     const fileInput = document.getElementById('file-input') as HTMLInputElement;
     if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
       console.error('No file selected');
@@ -34,12 +19,16 @@ const Upload = () => {
     formData.append('file', file);
 
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/transactions', formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post(
+        'http://localhost:3000/api/v1/transactions',
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
 
       console.log('File uploaded:', response.data);
     } catch (error) {
@@ -47,17 +36,15 @@ const Upload = () => {
     }
   };
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsFileSelected(!!event.target.files && event.target.files.length > 0);
+  };
+
   return (
     <div>
       <h1>Upload</h1>
-      {token ? (
-        <>
-          <input id="file-input" type="file" />
-          <button onClick={handleUpload}>Upload</button>
-        </>
-      ) : (
-        <button onClick={handleLogin}>Login</button>
-      )}
+      <input id="file-input" type="file" onChange={handleFileChange} />
+      {isFileSelected && <button onClick={handleUpload}>Upload</button>}
     </div>
   );
 };
