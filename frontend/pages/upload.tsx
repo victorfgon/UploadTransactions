@@ -7,7 +7,9 @@ const Upload = () => {
   const token = authContext?.token ?? '';
   const [isFileSelected, setIsFileSelected] = useState(false);
 
-  const handleUpload = async () => {
+  const handleUpload = async (event: React.FormEvent) => {
+    event.preventDefault();
+
     const fileInput = document.getElementById('file-input') as HTMLInputElement;
     if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
       console.error('No file selected');
@@ -43,8 +45,10 @@ const Upload = () => {
   return (
     <div>
       <h1>Upload</h1>
-      <input id="file-input" type="file" onChange={handleFileChange} />
-      {isFileSelected && <button onClick={handleUpload}>Upload</button>}
+      <form onSubmit={handleUpload}>
+        <input id="file-input" type="file" onChange={handleFileChange} />
+        {isFileSelected && <button type="submit">Upload</button>}
+      </form>
     </div>
   );
 };
