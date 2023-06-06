@@ -38,19 +38,62 @@ const HomePage = () => {
   };
 
   return (
-    <div>
-      <h1>Home Page</h1>
+    <div style={styles.container}>
+      <h1 style={styles.heading}>Welcome to Your Dashboard</h1>
       {isLoggedIn ? (
-        <>
-          <button onClick={handleUploadClick}>Upload Transactions</button>
-          <button onClick={handleTransactionsClick}>Go to Transactions</button>
-          <button onClick={handleSellerBalanceClick}>Go to Seller Balance</button>
-        </>
+        <div style={styles.buttonsContainer}>
+          <button onClick={handleUploadClick} style={styles.button}>Upload Transactions</button>
+          <button onClick={handleTransactionsClick} style={styles.button}>Go to Transactions</button>
+          <button onClick={handleSellerBalanceClick} style={styles.button}>Go to Seller Balance</button>
+        </div>
       ) : (
-        <button onClick={handleLogin}>Login</button>
+        <button onClick={handleLogin} style={styles.loginButton}>Login</button>
       )}
     </div>
   );
+};
+
+const styles: { [key: string]: React.CSSProperties } = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100vh',
+    backgroundColor: '#f2f2f2',
+  },
+  heading: {
+    fontSize: '2.5rem',
+    marginBottom: '2rem',
+    color: '#333',
+    textAlign: 'center',
+  },
+  buttonsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  button: {
+    padding: '1rem 2rem',
+    marginBottom: '1rem',
+    fontSize: '1.2rem',
+    fontWeight: 'bold',
+    color: '#fff',
+    backgroundColor: '#4285f4',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  loginButton: {
+    padding: '1rem 2rem',
+    fontSize: '1.2rem',
+    fontWeight: 'bold',
+    color: '#333',
+    backgroundColor: '#f2f2f2',
+    border: '2px solid #333',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
 };
 
 export default HomePage;
