@@ -14,13 +14,13 @@ export class Seller {
   @ApiProperty({ description: 'The unique identifier of the seller.' })
   id: number;
 
-  @Column()
+  @Column({ nullable: true }) // Adicionado o modificador nullable
   @IsNumber()
   @ApiProperty({
     description:
-      'The ID of the procuder afilliated with this seller if the seller is not a producer.',
+      'The ID of the producer affiliated with this seller if the seller is not a producer.',
   })
-  affiliatedProducerId: number;
+  affiliatedProducerId?: number;
 
   @Column()
   @IsNumber()

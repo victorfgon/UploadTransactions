@@ -43,15 +43,18 @@ describe('TransactionService', () => {
   });
 
   describe('getAllTransactions', () => {
-    it('should fetch all transactions', async () => {
+    it('should fetch transactions', async () => {
       const transactionsMock: Transaction[] = [{}, {}] as Transaction[];
 
       entityManager.find = jest.fn().mockResolvedValueOnce(transactionsMock);
 
-      const result = await transactionService.getAllTransactions();
+      const result = await transactionService.getAllTransactions(1, 20);
 
       expect(entityManager.find).toHaveBeenCalledTimes(1);
-      expect(entityManager.find).toHaveBeenCalledWith(Transaction);
+      expect(entityManager.find).toHaveBeenCalledWith(
+        expect.any(Function),
+        expect.objectContaining({ skip: 0, take: 20 }),
+      );
       expect(result).toEqual(transactionsMock);
     });
   });

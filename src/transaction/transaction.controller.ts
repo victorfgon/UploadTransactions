@@ -5,6 +5,7 @@ import {
   UploadedFile,
   UseInterceptors,
   Logger,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { TransactionService } from './transaction.service';
@@ -49,7 +50,10 @@ export class TransactionController {
     isArray: true,
     description: 'Returns all transactions',
   })
-  async getAllTransactions(): Promise<Transaction[]> {
-    return this.transactionService.getAllTransactions();
+  async getAllTransactions(
+    @Query('page') page = 1,
+    @Query('limit') limit = 50,
+  ): Promise<Transaction[]> {
+    return this.transactionService.getAllTransactions(page, limit);
   }
 }

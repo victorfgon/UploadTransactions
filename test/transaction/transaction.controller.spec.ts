@@ -53,7 +53,7 @@ describe('TransactionController', () => {
   });
 
   describe('getAllTransactions', () => {
-    it('should return all transactions', async () => {
+    it('should return transactions', async () => {
       const transactionsMock: Transaction[] = [{}, {}] as Transaction[];
 
       jest.spyOn(service, 'getAllTransactions').mockImplementation(async () => {

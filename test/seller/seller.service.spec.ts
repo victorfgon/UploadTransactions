@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Seller } from 'src/seller/seller.entity';
 import { SellerService } from 'src/seller/seller.service';
 import { EntityManager } from 'typeorm';
@@ -31,23 +32,27 @@ describe('SellerService', () => {
       expect(result).toBe(sellerBalance);
     });
 
-    it('should return 0 if seller does not exist', async () => {
+    it('should return an error if seller does not exist', async () => {
       const sellerId = 1;
+      const errorMessage = 'Seller not found';
 
-      entityManager.findOne = jest.fn().mockResolvedValueOnce(null);
+      entityManager.findOne = jest
+        .fn()
+        .mockRejectedValueOnce(new NotFoundException(errorMessage));
 
-      const result = await sellerService.getBalance(sellerId);
+      await expect(sellerService.getBalance(sellerId)).rejects.toThrowError(
+        errorMessage,
+      );
 
       expect(entityManager.findOne).toHaveBeenCalledTimes(1);
       expect(entityManager.findOne).toHaveBeenCalledWith(Seller, {
         where: { id: sellerId },
       });
-      expect(result).toBe(0);
     });
 
     it('should throw an error if failed to fetch seller balance', async () => {
       const sellerId = 1;
-      const errorMessage = 'Failed to fetch seller balance.';
+      const errorMessage = 'Failed to fetch seller balance';
 
       entityManager.findOne = jest
         .fn()

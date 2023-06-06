@@ -38,7 +38,7 @@ describe('SellerController', () => {
 
     it('should throw an error if failed to get seller balance', async () => {
       const sellerId = 1;
-      const errorMessage = 'Failed to get seller balance.';
+      const errorMessage = 'Failed to get seller balance';
       jest
         .spyOn(sellerService, 'getBalance')
         .mockRejectedValueOnce(new Error(errorMessage));

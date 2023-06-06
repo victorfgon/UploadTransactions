@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Transaction } from './transaction.entity';
 import { InjectEntityManager } from '@nestjs/typeorm';
-import { EntityManager } from 'typeorm';
+import { EntityManager, FindManyOptions } from 'typeorm';
 
 @Injectable()
 export class TransactionService {
@@ -44,9 +44,16 @@ export class TransactionService {
     }
   }
 
-  async getAllTransactions(): Promise<Transaction[]> {
+  async getAllTransactions(
+    page: number,
+    limit: number,
+  ): Promise<Transaction[]> {
     try {
-      return this.entityManager.find(Transaction);
+      const options: FindManyOptions<Transaction> = {
+        skip: (page - 1) * limit,
+        take: limit,
+      };
+      return this.entityManager.find(Transaction, options);
     } catch (error) {
       this.logger.error('Failed to fetch transactions.', error);
       throw new Error('Failed to fetch transactions.');

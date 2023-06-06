@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
 import { Seller } from './seller.entity';
 import { InjectEntityManager } from '@nestjs/typeorm';
@@ -18,13 +18,17 @@ export class SellerService {
       if (seller) {
         return seller.balance;
       } else {
-        return 0;
+        throw new NotFoundException('Seller not found');
       }
     } catch (error) {
       this.logger.error(
         `Failed to fetch seller balance. Error: ${error.message}`,
       );
-      throw new Error('Failed to fetch seller balance.');
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new Error('Failed to fetch seller balance');
+      }
     }
   }
 }

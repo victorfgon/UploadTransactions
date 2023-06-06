@@ -1,4 +1,12 @@
-import { Controller, Get, Param, UseGuards, Logger } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  UseGuards,
+  Logger,
+  NotFoundException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { SellerService } from './seller.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiBearerAuth, ApiResponse, ApiParam } from '@nestjs/swagger';
@@ -24,7 +32,11 @@ export class SellerController {
       return balance;
     } catch (error) {
       this.logger.error(`Failed to get seller balance: ${error.message}`);
-      throw new Error('Failed to get seller balance.');
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException('Failed to get seller balance');
+      }
     }
   }
 }
