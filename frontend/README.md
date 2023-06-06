@@ -53,7 +53,8 @@ Esses são os valores possíveis para o campo Tipo:
 4 - O servidor estará disponível em http://localhost:3000.
 5 - A documentação da API estará disponível em http://localhost:3000/api#/.
 6 - Para rodar os testes: npm run test.
-7 - O adminer do banco de dados PostgreSQL configurado no docker-compose estará disponível em http://localhost:8080/ . 
+7 - Para rodar o banco através do docker-compose use o comando: docker-compose up -d e o adminer do banco de dados PostgreSQL configurado no docker-compose estará disponível em http://localhost:8080/ .
+  servidor/container_name: 'pgsql' 
   username: 'pguser',
   password: 'pgpassword',
   database: 'nestjs',
