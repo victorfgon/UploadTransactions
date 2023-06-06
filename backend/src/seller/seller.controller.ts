@@ -10,6 +10,7 @@ import {
 import { SellerService } from './seller.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiBearerAuth, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { Seller } from './seller.entity';
 
 @Controller('api/v1/sellers')
 @UseGuards(AuthGuard('jwt'))
@@ -25,6 +26,7 @@ export class SellerController {
   @ApiResponse({
     status: 200,
     description: 'Returns the balance of the seller',
+    type: Seller,
   })
   async getBalance(@Param('id') id: number): Promise<number> {
     try {
