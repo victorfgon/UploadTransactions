@@ -14,7 +14,7 @@ export class Seller {
   @ApiProperty({ description: 'The unique identifier of the seller.' })
   id: number;
 
-  @Column({ nullable: true }) // Adicionado o modificador nullable
+  @Column({ nullable: true })
   @IsNumber()
   @ApiProperty({
     description:
