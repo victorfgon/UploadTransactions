@@ -42,9 +42,13 @@ Esses são os valores possíveis para o campo Tipo:
 ## Frontend
 
 1 - Acesse o diretório do frontend: cd frontend.
+
 2 - Instale as dependências: npm install.
+
 3 - Execute o aplicativo frontend: npm run dev.
+
 4 - O aplicativo estará disponível em http://localhost:3001.
+
 5 - Para rodar os testes: npm run test. E aperte "a" para rodar todos os testes.
 
 ## Backend
