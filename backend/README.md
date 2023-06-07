@@ -50,15 +50,21 @@ Esses são os valores possíveis para o campo Tipo:
 ## Backend
 
 1 - Acesse o diretório do backend: cd backend.
+
 2 - Instale as dependências: npm install.
+
 3 - Para rodar o banco através do docker-compose certifique de estár com o daemon do Docker inicializado e use o comando: docker-compose up -d e o adminer do banco de dados PostgreSQL configurado no docker-compose estará disponível em http://localhost:8080/ .
   servidor/container_name: 'pgsql' 
   username: 'pguser',
   password: 'pgpassword',
   database: 'nestjs',
+  
 4 - Execute o servidor backend: npm run start:dev.
+
 5 - O servidor estará disponível em http://localhost:3000.
+
 6 - A documentação da API estará disponível em http://localhost:3000/api#/.
+
 7 - Para rodar os testes: npm run test.
 
 ## Implementação
