@@ -1,18 +1,8 @@
-import {
-  Controller,
-  Post,
-  Body,
-  ValidationPipe,
-  UseGuards,
-  Logger,
-} from '@nestjs/common';
+import { Controller, Post, Body, ValidationPipe, Logger } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { ReturnUserDto } from './dto/return-user.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { UserRole } from './user-roles.enum';
-import { Role } from 'src/auth/role.decorator';
 
 @Controller('api/v1/users')
 @ApiTags('Users')
@@ -22,8 +12,6 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
-  @Role(UserRole.ADMIN)
-  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Create admin user' })
   @ApiResponse({
     status: 201,
