@@ -61,4 +61,4 @@ Esses são os valores possíveis para o campo Tipo:
 
 ## Implementação
 
-A página inicial da aplicação possui um botão de login onde é feito por motivos de praticidade um login automático com credenciais de um adiministrador, dessa forma o usuário irá obeter um token e o acesso a todos os endpoints que estão protegidos com autenticação e autorização. Após o login, irá ser liberado um menu onde o usuário poderá ir para a página de upload, página para consultar todas as transações e página para buscar um vendedor pelo id para obter seu saldo.
+A página inicial da aplicação possui um botão de criação de usuário e um de login onde é feito por motivos de praticidade um login automático com credenciais de um adiministrador, você precisará clicar no botão de criar usuário pelo menos uma vez, dessa forma o usuário irá obter o usuário que dará um token e o acesso a todos os endpoints que estão protegidos com autenticação e autorização. Após o login, irá ser liberado um menu onde o usuário poderá ir para a página de upload, página para consultar todas as transações e página para buscar um vendedor pelo id para obter seu saldo.

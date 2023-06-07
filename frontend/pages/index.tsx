@@ -25,6 +25,23 @@ const HomePage = () => {
     }
   };
 
+  const handleCreateUser = async () => {
+    try {
+      await axios.post(
+        'http://localhost:3000/api/v1/users',
+        {
+          name: 'Admin3',
+          email: 'admin3@gmail.com',
+          password: '@123Abc',
+          passwordConfirmation: '@123Abc',
+        },
+      );
+      console.log('User created successfully');
+    } catch (error) {
+      console.error('Error occurred during user creation:', error);
+    }
+  };
+
   const handleUploadClick = () => {
     router.push('/upload');
   };
@@ -47,7 +64,10 @@ const HomePage = () => {
           <button onClick={handleSellerBalanceClick} style={styles.button}>Go to Seller Balance</button>
         </div>
       ) : (
-        <button onClick={handleLogin} style={styles.loginButton}>Login</button>
+        <>
+          <button onClick={handleLogin} style={styles.loginButton}>Login</button>
+          <button onClick={handleCreateUser} style={styles.loginButton}>Create User</button>
+        </>
       )}
     </div>
   );
@@ -86,6 +106,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   loginButton: {
     padding: '1rem 2rem',
+    marginBottom: '1rem',
     fontSize: '1.2rem',
     fontWeight: 'bold',
     color: '#333',
