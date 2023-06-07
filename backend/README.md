@@ -13,7 +13,9 @@ Sua tarefa é construir uma aplicação que permita o upload de um arquivo conte
 O formato de arquivo txt aceito será:
 
 12022-01-15T19:20:30-03:00CURSO DE BEM-ESTAR            0000012750JOSE CARLOS
+
 12021-12-03T11:46:02-03:00DOMINANDO INVESTIMENTOS       0000050000MARIA CANDIDA
+
 22022-01-16T14:13:54-03:00CURSO DE BEM-ESTAR            0000012750THIAGO OLIVEIRA
 
 ## Formato do arquivo de entrada
